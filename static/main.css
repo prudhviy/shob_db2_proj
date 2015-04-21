@@ -1,0 +1,119 @@
+*{margin: 0; padding: 0;}
+      body{font-family: Arial; font-size: 12px; color: #666;  background-color: #f3f3f3;}
+      #wrapper{ margin: 0 auto;padding: 0 20px 20px 20px; width: 1000px;}
+      h2, h4 {text-align: center; margin-bottom: 20px;}
+      * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+      }
+      .col {float: left; background-color: #fff; padding: 10px; border: 1px solid #ddd;}
+
+      .col-wrap {margin: 0 auto; width: 1000px;}
+
+      .highlight_term {
+        background-color: #f2f2a6;
+        padding: 3px;
+        border-radius: 25px;
+      }
+      
+      .results-h4 {
+        display: none;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        margin-left: 250px;
+      }
+
+
+      .left-col {
+          width: 180px;
+          margin-right: 10px;
+          visibility: hidden;
+
+      }
+
+      .right-col {
+          width: 180px;
+          visibility: hidden;
+      }
+
+      .middle-col {
+          width: 600px;
+          margin-right: 10px;
+      }
+
+
+
+      .cf:before,
+      .cf:after {
+          content: " ";
+          display: table;
+      }
+
+      .cf:after {
+          clear: both;
+      }
+
+      .inputs {
+
+      }
+
+      .input{
+        padding: 4px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        margin-left: 10px;
+        width: 300px;
+      }
+
+      .input:focus {
+        border-color: #00aeff;
+      }
+
+      .lbl {
+        display: inline-block;
+        width: 123px;
+        margin-right: 10px;
+        text-align: right;
+      }
+
+      .input-wrap {
+        padding-bottom: 6px;
+      }
+      .search_icon {
+        cursor: pointer;
+      }
+
+      .tweet-wrap {
+        border-top: 1px solid #ddd;
+        margin: 20px 0;
+        padding: 20px 0;
+      }
+
+
+      .avatar {
+        float: left;
+        margin-right: 10px;
+      }
+      .user-info{
+
+      }
+
+      .at-id, .location, .date {
+        color: #aaa;
+      }
+      .user-tweet {
+        float: left;
+        width: 525px;
+      }
+      .tweet-info{
+        margin: 6px 0;
+      }
+      .tweet {
+        margin: 30px 0;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+      }
