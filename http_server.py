@@ -8,11 +8,32 @@ DB = 'mathstack'
 app = Flask(__name__, static_url_path='')
 
 
+def get_query_four(db):
+    coll = db['comments']
+    result = []
+
+    for each in coll.find({"Text" : {'$regex': "thank you"}}).limit(10):
+        result.append(each)
+
+    return result
+
+def get_query_two(db, tags):
+    coll = db['query_two']
+    result = []
+
+    for tag in tags:
+        tag_result = []
+        for each in db.query_two.find({"_id": {'$regex': '^' + tag + "_.*"}}):
+            tag_result.append(each)
+        result.append(tag_result)
+
+    return result
+
 def get_query_one(db):
     query_one_coll = db['query_one']
     result = []
 
-    for each in query_one_coll.find().sort([("value", -1)]).limit(10):
+    for each in query_one_coll.find().sort([("value", -1)]).limit(5):
         result.append(each)
 
     return result
@@ -27,13 +48,17 @@ def query_api():
 
     if request.method == 'POST':
         query_num = request.form['query_num']
-        #query_field = request.form['query_field']
         
         result = {'results': []}
         
         if query_num == '1':
             result['results'] = get_query_one(db)
-            print result
+        elif query_num == '2':
+            tags = request.form['tags']
+            tags = tags.split(',')
+            result['results'] = get_query_two(db, tags)
+        elif query_num == '4':
+            result['results'] = get_query_four(db)
        
 
     return jsonify(**result)

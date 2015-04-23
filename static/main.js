@@ -12,11 +12,9 @@ app.init_click_handlers = function() {
         var data = {};
         query_one_api();
     });
-    $('body').on('click', '.all_terms', function(e) {
+    $('body').on('click', '.query_two', function(e) {
         var data = {};
-        data.query = $('.search_input', $(e.currentTarget).parent()).val();
-        app.update_input(e, data.query);
-        all_terms_search(data);
+        query_two_api();
     });
     var query_one_api = function() {
         data = {};
@@ -29,12 +27,91 @@ app.init_click_handlers = function() {
         });
         
         promise.success(function(response) {
-            console.log(response);
-            /*app.show_tweets(response, function(text) {
-                text = text.replace(new RegExp(data.query, 'ig'), "<span class='highlight_term'>" + data.query + "</span>");
-                return text;
-            });*/
+            var columns_data = [];
+            $.each(response['results'], function(i, pie) {
+                var post_id = 'Rank ' + (i+1).toString() + ' - ' + pie['value'] + ' votes';
+                var votes = pie['value'];
+                columns_data.push([post_id, votes]);
+            });
+            
+            var chart = c3.generate({
+                bindto: '#chart',
+                data: {    
+                    columns: columns_data,
+                    type : 'pie',
+                    onclick: function (d, i) { console.log("onclick", d, i); },
+                    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+                }
+            });
         });
+        promise.error(function() {
+            
+        });
+    };
+    var query_two_api = function() {
+        data = {};
+        data.query_num = '2';
+        data.tags = 'calculus,combinatorics,limits';
+        
+        var promise = $.ajax({
+            url: "/query/",
+            type: "POST",
+            data: data
+        });
+        
+        promise.success(function(response) {
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var columns_data = [];
+            var months_data = {};
+            
+            $.each(response['results'], function(i, tag){
+                $.each(tag, function(i, v) {
+                    var tag_month = v['_id'];
+                    tag_month = tag_month.split('_')
+                    var tag_name = tag_month[0];
+                    var month = parseInt(tag_month[1]);
+                    var month_name = months[month - 1];
+                    
+                    if(month_name in months_data) {
+                        months_data[month_name].push(v['value']);
+                    } else {
+                        months_data[month_name] = [v['value']];
+                    }
+                });    
+            });
+            
+            $.each(months_data, function(k, v) {
+                v.splice(0, 0, k);
+            });
+
+            $.each(months, function(i, name) {
+                columns_data.push(months_data[name]);
+            });
+
+            var tags_data = [];
+
+            var chart = c3.generate({
+                data: {
+                    columns: columns_data,
+                    type: 'bar',
+                    groups: [
+                        months
+                    ]
+                },
+                grid: {
+                    y: {
+                        lines: [
+                                  {value: 1, text: 'calculus'},
+                                  {value: 2, text: 'real-analysis'},
+                                  {value: 3, text: 'linear-algebra'}
+                                ]
+                    }
+                },
+                bindto: '#chart'
+            });
+        });
+
         promise.error(function() {
             
         });
