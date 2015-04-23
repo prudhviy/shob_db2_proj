@@ -44,6 +44,7 @@ app.init_click_handlers = function() {
                     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
                 }
             });
+            $('.result').empty().prepend('<div>Top rated Questions:</div>');
         });
         promise.error(function() {
             
@@ -64,7 +65,7 @@ app.init_click_handlers = function() {
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var columns_data = [];
             var months_data = {};
-            
+            $('.result').empty().prepend('<div>Tags: calculus, combinatorics, limits</div>');
             $.each(response['results'], function(i, tag){
                 $.each(tag, function(i, v) {
                     var tag_month = v['_id'];
