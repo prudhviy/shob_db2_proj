@@ -76,7 +76,7 @@ app.init_click_handlers = function() {
             var months_data = {};
             var html = app.panel_template({
                 heading: "Tagging trends in a year",
-                content: "Results show the tagged questions trends for the year 2014 in a stacked bar chart"
+                content: "Results show the tagged questions trends for the year 2014 in a stacked bar chart. #calculus, #combinatorics, #limits"
             });
             $('.result').empty().prepend(html).append('<div id="chart"></div>');
             $.each(response['results'], function(i, tag){
