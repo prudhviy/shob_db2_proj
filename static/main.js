@@ -4,7 +4,8 @@ var app = app || {};
 (function() {
     app.top_tags_template = Handlebars.compile($("#top_tags_template").html());
     app.panel_template = Handlebars.compile($("#panel_template").html());
-    app.thank_you_template = Handlebars.compile($("#thank_you_template").html());    
+    app.thank_you_template = Handlebars.compile($("#thank_you_template").html());
+    app.search_template = Handlebars.compile($("#search_template").html()); 
 })();
 
 
@@ -21,6 +22,10 @@ app.init_click_handlers = function() {
     $('body').on('click', '.query_four', function(e) {
         query_four_api();
     });
+    $('body').on('click', '.search-btn', function(e) {
+        query_five_api();
+    });
+    
     var query_one_api = function() {
         data = {};
         data.query_num = '1';
@@ -188,7 +193,36 @@ app.init_click_handlers = function() {
             
         });
     };
-    
+    var query_five_api = function() {
+        data = {};
+        data.query_num = '5';
+        data.reputation = $('.search-input').val();
+        
+        var promise = $.ajax({
+            url: "/query/",
+            type: "POST",
+            data: data
+        });
+        
+        promise.success(function(response) {
+            var start_html = '<ul class="list-group" style="width:450px;">';
+            var li = '';
+            var panel_html = app.panel_template({
+                heading: "Search Reputation Results",
+                content: "Results show the users who have more reputation than " + data.reputation
+            });
+            $.each(response['results'], function(i, user) {
+                var html = '';
+                html = app.search_template(user);
+                li += html;
+            });
+            $('.result').empty().prepend(panel_html);
+            $('.result').append(start_html + li + '</ul>');
+        });
+        promise.error(function() {
+            
+        });
+    };
 };
 
 app.init_click_handlers();

@@ -8,6 +8,15 @@ DB = 'mathstack'
 # set the project root directory as the static folder, you can set others.
 app = Flask(__name__, static_url_path='')
 
+def get_query_five(db, value):
+    coll = db['users']
+    result = []
+    value = int(value)
+    for each in coll.find({"Reputation": { '$gt': value } }).limit(10).sort([('Reputation', 1)]):
+        del each['_id']
+        result.append(each)
+
+    return result
 
 def get_query_four(db):
     coll = db['comments']
@@ -74,6 +83,10 @@ def query_api():
             result['results'] = get_query_three(db)
         elif query_num == '4':
             result['results'] = get_query_four(db)
+        elif query_num == '5':
+            value = request.form['reputation']
+            result['results'] = get_query_five(db, value)
+            
 
     return jsonify(**result)
 
