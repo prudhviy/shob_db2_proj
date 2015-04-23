@@ -1,20 +1,22 @@
 var app = app || {};
 
-/*
+
 (function() {
-    var source = $("#tweet-template").html();
-    app.tweet_template = Handlebars.compile(source);
+    app.top_tags_template = Handlebars.compile($("#top_tags_template").html());
+    app.panel_template = Handlebars.compile($("#panel_template").html());
+    
 })();
-*/
+
 
 app.init_click_handlers = function() {
     $('body').on('click', '.query_one', function(e) {
-        var data = {};
         query_one_api();
     });
     $('body').on('click', '.query_two', function(e) {
-        var data = {};
         query_two_api();
+    });
+    $('body').on('click', '.query_three', function(e) {
+        query_three_api();
     });
     var query_one_api = function() {
         data = {};
@@ -44,7 +46,11 @@ app.init_click_handlers = function() {
                     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
                 }
             });
-            $('.result').empty().prepend('<div>Top rated Questions:</div>');
+            var panel_html = app.panel_template({
+                heading: "Top rated questions",
+                content: "Results show the top rated questions based on votes they recieved in a pie chart"
+            });
+            $('.result').empty().prepend(panel_html);
         });
         promise.error(function() {
             
@@ -65,7 +71,11 @@ app.init_click_handlers = function() {
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var columns_data = [];
             var months_data = {};
-            $('.result').empty().prepend('<div>Tags: calculus, combinatorics, limits</div>');
+            var html = app.panel_template({
+                heading: "Tagging trends in a year",
+                content: "Results show the tagged questions trends for the year 2014 in a stacked bar chart"
+            });
+            $('.result').empty().prepend(html);
             $.each(response['results'], function(i, tag){
                 $.each(tag, function(i, v) {
                     var tag_month = v['_id'];
@@ -117,7 +127,34 @@ app.init_click_handlers = function() {
             
         });
     };
-    
+    var query_three_api = function() {
+        data = {};
+        data.query_num = '3';
+        
+        var promise = $.ajax({
+            url: "/query/",
+            type: "POST",
+            data: data
+        });
+        
+        promise.success(function(response) {
+            var start_html = '<ul class="list-group" style="width:450px;">';
+            var li = '';
+            var panel_html = app.panel_template({
+                heading: "Top ten tags for mathematics",
+                content: "Results show the top 10 tags in mathematics category"
+            });
+            $.each(response['results'], function(i, tag_info) {
+                var html = app.top_tags_template(tag_info);
+                li += html;
+            });
+            $('.result').empty().prepend(panel_html);
+            $('.result').append(start_html + li + '</ul>');
+        });
+        promise.error(function() {
+            
+        });
+    };
 };
 
 app.init_click_handlers();

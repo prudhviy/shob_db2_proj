@@ -19,7 +19,11 @@
 
         <!-- Load c3.css -->
   <link href="dist/c3-0.4.10/c3.css" rel="stylesheet" type="text/css">
-
+  <style type="text/css">
+  .result {
+    margin-left: 100px;
+  } 
+  </style>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -43,8 +47,8 @@
             Insights<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="#" class="query_one">Top rated Q's</a></li>
-            <li><a href="#" class="query_two">Tagged questions in a year</a></li>
-            <li><a href="#" class="query_four">Top 10 Tags</a></li>
+            <li><a href="#" class="query_two">Tagging trends in a year</a></li>
+            <li><a href="#" class="query_three">Top 10 Tags</a></li>
             <li><a href="#" class="query_five">User's reputation</a></li>
           </ul>
         </li>
@@ -63,6 +67,17 @@
   </div>
   <div id="chart"></div>
   </body>
+  <script id="top_tags_template" type="text/x-handlebars-template">
+      <li class="list-group-item"><a href="http://math.stackexchange.com/questions/tagged/{{TagName}}" target="_blank">#{{TagName}}</a> - <span class="label label-info">{{Count}}</span></li>
+  </script>
+  <script id="panel_template" type="text/x-handlebars-template">
+    <div class="panel panel-info" style="width:450px;">
+      <div class="panel-heading">{{heading}}</div>
+      <div class="panel-body">
+        {{content}}
+      </div>
+    </div>
+  </script>
   <script src="jquery-1.11.2.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="dist/js/bootstrap.min.js"></script>
