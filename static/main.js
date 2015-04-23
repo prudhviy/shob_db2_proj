@@ -4,7 +4,7 @@ var app = app || {};
 (function() {
     app.top_tags_template = Handlebars.compile($("#top_tags_template").html());
     app.panel_template = Handlebars.compile($("#panel_template").html());
-    
+    app.thank_you_template = Handlebars.compile($("#thank_you_template").html());    
 })();
 
 
@@ -17,6 +17,9 @@ app.init_click_handlers = function() {
     });
     $('body').on('click', '.query_three', function(e) {
         query_three_api();
+    });
+    $('body').on('click', '.query_four', function(e) {
+        query_four_api();
     });
     var query_one_api = function() {
         data = {};
@@ -155,6 +158,37 @@ app.init_click_handlers = function() {
             
         });
     };
+    var query_four_api = function() {
+        data = {};
+        data.query_num = '4';
+        
+        var promise = $.ajax({
+            url: "/query/",
+            type: "POST",
+            data: data
+        });
+        
+        promise.success(function(response) {
+            var start_html = '<ul class="list-group" style="width:450px;">';
+            var li = '';
+            var panel_html = app.panel_template({
+                heading: "Thank you answers",
+                content: "Results show the thank you comments when users comment on answers they find usefull"
+            });
+            $.each(response['results'], function(i, comment) {
+                var html = '';
+                comment.Text = comment.Text.replace(new RegExp('thank you', 'ig'), "<span class='label label-warning'>thank you</span>");
+                html = app.thank_you_template(comment);
+                li += html;
+            });
+            $('.result').empty().prepend(panel_html);
+            $('.result').append(start_html + li + '</ul>');
+        });
+        promise.error(function() {
+            
+        });
+    };
+    
 };
 
 app.init_click_handlers();

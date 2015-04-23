@@ -14,6 +14,7 @@ def get_query_four(db):
     result = []
 
     for each in coll.find({"Text" : {'$regex': "thank you"}}).limit(10):
+        del each['_id']
         result.append(each)
 
     return result
@@ -73,7 +74,6 @@ def query_api():
             result['results'] = get_query_three(db)
         elif query_num == '4':
             result['results'] = get_query_four(db)
-       
 
     return jsonify(**result)
 
