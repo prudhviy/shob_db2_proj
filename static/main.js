@@ -36,6 +36,11 @@ app.init_click_handlers = function() {
                 columns_data.push([post_id, votes]);
             });
             
+            var panel_html = app.panel_template({
+                heading: "Top rated questions",
+                content: "Results show the top rated questions based on votes they recieved in a pie chart"
+            });
+            $('.result').empty().prepend(panel_html).append('<div id="chart"></div>');
             var chart = c3.generate({
                 bindto: '#chart',
                 data: {    
@@ -46,11 +51,6 @@ app.init_click_handlers = function() {
                     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
                 }
             });
-            var panel_html = app.panel_template({
-                heading: "Top rated questions",
-                content: "Results show the top rated questions based on votes they recieved in a pie chart"
-            });
-            $('.result').empty().prepend(panel_html);
         });
         promise.error(function() {
             
@@ -75,7 +75,7 @@ app.init_click_handlers = function() {
                 heading: "Tagging trends in a year",
                 content: "Results show the tagged questions trends for the year 2014 in a stacked bar chart"
             });
-            $('.result').empty().prepend(html);
+            $('.result').empty().prepend(html).append('<div id="chart"></div>');
             $.each(response['results'], function(i, tag){
                 $.each(tag, function(i, v) {
                     var tag_month = v['_id'];
