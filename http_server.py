@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
@@ -13,6 +14,17 @@ def get_query_four(db):
     result = []
 
     for each in coll.find({"Text" : {'$regex': "thank you"}}).limit(10):
+        result.append(each)
+
+    return result
+
+
+def get_query_three(db):
+    coll = db['tags']
+    result = []
+
+    for each in coll.find().sort([('Count', -1)]).limit(10):
+        del each['_id']
         result.append(each)
 
     return result
@@ -57,6 +69,8 @@ def query_api():
             tags = request.form['tags']
             tags = tags.split(',')
             result['results'] = get_query_two(db, tags)
+        elif query_num == '3':
+            result['results'] = get_query_three(db)
         elif query_num == '4':
             result['results'] = get_query_four(db)
        
@@ -70,5 +84,7 @@ def static_proxy(path):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
-    #app.run(host='0.0.0.0')
+    if len(sys.argv) > 1:
+        app.run(debug=True)
+    else:
+        app.run(host='0.0.0.0')
